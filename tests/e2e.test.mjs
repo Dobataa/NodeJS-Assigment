@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import chaiHttp from 'chai-http';
 import nock from 'nock';
-import index from '../index.js';
+import app from '../index.js';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -22,7 +22,7 @@ describe('Currency Conversion and Rates API', () => {
 
     describe('GET /convert', () => {
         it('should convert currency correctly', (done) => {
-            chai.request(index)
+            chai.request(app)
                 .get('/convert?from=USD&to=EUR&amount=120')
                 .end((err, res) => {
                     expect(res).to.have.status(200);
@@ -32,7 +32,7 @@ describe('Currency Conversion and Rates API', () => {
         });
 
         it('should return 400 if parameters are missing', (done) => {
-            chai.request(index)
+            chai.request(app)
                 .get('/convert?from=USD&to=EUR')
                 .end((err, res) => {
                     expect(res).to.have.status(400);
@@ -42,7 +42,7 @@ describe('Currency Conversion and Rates API', () => {
         });
 
         it('should return 400 if currency code is invalid', (done) => {
-            chai.request(index)
+            chai.request(app)
                 .get('/convert?from=USD&to=XYZ&amount=120')
                 .end((err, res) => {
                     expect(res).to.have.status(400);
@@ -58,7 +58,7 @@ describe('Currency Conversion and Rates API', () => {
                 .query({ access_key: '339ee2e5ada4e38a19f5867c837136d6' })
                 .reply(500, { error: 'Internal Server Error' });
 
-            chai.request(index)
+            chai.request(app)
                 .get('/convert?from=USD&to=EUR&amount=120')
                 .end((err, res) => {
                     expect(res).to.have.status(500);
@@ -70,7 +70,7 @@ describe('Currency Conversion and Rates API', () => {
 
     describe('GET /rates', () => {
         it('should return currency rates', (done) => {
-            chai.request(index)
+            chai.request(app)
                 .get('/rates')
                 .end((err, res) => {
                     expect(res).to.have.status(200);
@@ -88,7 +88,7 @@ describe('Currency Conversion and Rates API', () => {
                 .query({ access_key: '339ee2e5ada4e38a19f5867c837136d6' })
                 .reply(500, { error: 'Internal Server Error' });
 
-            chai.request(index)
+            chai.request(app)
                 .get('/rates')
                 .end((err, res) => {
                     expect(res).to.have.status(500);
