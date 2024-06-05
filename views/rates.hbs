@@ -1,0 +1,8 @@
+<main>
+    <h1 class="rates">All rates based on 1 EURO</h1>
+    <ul class="rates">
+        {{#each names}}
+            <li>{{this}} - {{lookup ../rates @index}}</li>
+        {{/each}}
+    </ul>
+</main>
